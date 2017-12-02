@@ -80,8 +80,8 @@ class ProgrammingAssignmentThree():
     """
     def idToName(self):
 
-        writePositiveExamples = open("negative_examples.txt", "a", encoding="utf-8")
-        writeNegativeExamples = open("positive_examples.txt", "a", encoding="utf-8")
+        writePositiveExamples = open("positive_example_place.txt", "a", encoding="utf-8")
+        writeNegativeExamples = open("negative_example_place.txt", "a", encoding="utf-8")
 
         for element in self.positiveExamples:
             subjectId = element['sub']
@@ -158,7 +158,7 @@ class ProgrammingAssignmentThree():
 
 
 
-test = ProgrammingAssignmentThree("20130403-institution.json")
+test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
 #test.queryGoogleKnowledgeGraph("/m/02v_brk")
 test.sortExamples()
 test.idToName()
