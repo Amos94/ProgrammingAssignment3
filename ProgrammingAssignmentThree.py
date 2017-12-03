@@ -151,6 +151,19 @@ class ProgrammingAssignmentThree():
         for element in self.negativeExamples:
             writeNegativeExamples.write(str(element))
 
+    """
+    Observed a bug in files, and I had to split the elements with a new line
+    This method was created for debug purposes
+    """
+    def normalizeDocuments(self, path):
+
+        readFile = open(str(path), "r", encoding="utf-8")
+
+        elements = readFile.read()
+        elements = elements.replace("}{", "}\n{")
+
+        writeFile = open(str(path)+"Nornalized.json", "a", encoding="utf-8")
+        writeFile.write(str(elements))
 
     """
     Remove the entities in which the subject or the object cannot be found in the text snippet
@@ -158,7 +171,7 @@ class ProgrammingAssignmentThree():
     def reviewTheSet(self, path):
 
         readFile = open(str(path), "r", encoding="utf-8")
-        writeFile = open(str(path).split(".json")+"CorrectedSet.json", "a", encoding="utf-8")
+        writeFile = open("CorrectedSet.json", "a", encoding="utf-8")
 
         for element in readFile:
             print(element)
@@ -171,4 +184,8 @@ test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
 #test.queryGoogleKnowledgeGraph("/m/02v_brk")
 #test.sortExamples()
 #test.idToName()
-test.reviewTheSet("negative_examples.txt")
+
+
+
+#For debug purposes
+#test.normalizeDocuments("negative_example_place.txt")
