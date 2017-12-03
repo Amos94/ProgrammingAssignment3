@@ -152,13 +152,23 @@ class ProgrammingAssignmentThree():
             writeNegativeExamples.write(str(element))
 
 
+    """
+    Remove the entities in which the subject or the object cannot be found in the text snippet
+    """
+    def reviewTheSet(self, path):
 
+        readFile = open(str(path), "r", encoding="utf-8")
+        writeFile = open(str(path).split(".json")+"CorrectedSet.json", "a", encoding="utf-8")
 
+        for element in readFile:
+            print(element)
+            break
 
 
 
 
 test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
 #test.queryGoogleKnowledgeGraph("/m/02v_brk")
-test.sortExamples()
-test.idToName()
+#test.sortExamples()
+#test.idToName()
+test.reviewTheSet("negative_examples.txt")
