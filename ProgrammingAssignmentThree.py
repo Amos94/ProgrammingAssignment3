@@ -1,5 +1,7 @@
 import json #used to decode the JSON files and fetch the data
 import urllib.request as urllib #used for Google Knowledge Graph
+import ast
+from demjson import decode
 
 class ProgrammingAssignmentThree():
 
@@ -44,6 +46,7 @@ class ProgrammingAssignmentThree():
         for element in response['itemListElement']:
             try:
                 name = element['result']['name']# + ' (' + str(element['resultScore']) + ')')
+                #print(name)
             except Exception as e:
                 print("There was a problem finding the entity "+ str(entity)+ " in the google knowledge graph")
                 print(e)
@@ -80,8 +83,8 @@ class ProgrammingAssignmentThree():
     """
     def idToName(self):
 
-        writePositiveExamples = open("positive_example_place.txt", "a", encoding="utf-8")
-        writeNegativeExamples = open("negative_example_place.txt", "a", encoding="utf-8")
+        writePositiveExamples = open("positive_example2.txt", "a", encoding="utf-8")
+        #writeNegativeExamples = open("negative_example_place.txt", "a", encoding="utf-8")
 
         for element in self.positiveExamples:
             subjectId = element['sub']
@@ -108,48 +111,49 @@ class ProgrammingAssignmentThree():
                 element['obj'] = objectName
             else:
                 print("Because the subject wasn't found in the google knowledge graph, the element will be removed from the list")
-            try:
-                self.positiveExamples.remove(element)
-            except:
-                pass
+            # try:
+            #     self.positiveExamples.remove(element)
+            # except:
+            #     pass
+            writePositiveExamples.write(str(element))
         print(self.positiveExamples)
 
-        for element in self.positiveExamples:
-            writePositiveExamples.write(str(element))
+        # for element in self.positiveExamples:
+        #     writePositiveExamples.write(str(element))
 
-        for element in self.negativeExamples:
-            subjectId = element['sub']
-            objectId = element['obj']
+        # for element in self.negativeExamples:
+        #     subjectId = element['sub']
+        #     objectId = element['obj']
+        #
+        #     #print(subjectId, objectId)
+        #     try:
+        #         subjectName = self.queryGoogleKnowledgeGraph(subjectId)
+        #         objectName = self.queryGoogleKnowledgeGraph(objectId)
+        #     except Exception as e:
+        #         self.negativeExamples.remove(element)
+        #         print("An error occured while resolving ids: " + str(subjectId) + ", "+str(objectId)+". From the following element: "+str(element)+"\n")
+        #         print("As a consequence, the element will be remove from the examples list")
+        #
+        #     if(subjectName != ""):
+        #         element['sub'] = subjectName
+        #     else:
+        #         print("Because the subject wasn't found in the google knowledge graph, the element will be removed from the list")
+        #         try:
+        #             self.negativeExamples.remove(element)
+        #         except:
+        #             pass
+        #     if(objectName != ""):
+        #         element['obj'] = objectName
+        #     else:
+        #         print("Because the subject wasn't found in the google knowledge graph, the element will be removed from the list")
+        #         try:
+        #             self.negativeExamples.remove(element)
+        #         except:
+        #             pass
+        #print(self.negativeExamples)
 
-            #print(subjectId, objectId)
-            try:
-                subjectName = self.queryGoogleKnowledgeGraph(subjectId)
-                objectName = self.queryGoogleKnowledgeGraph(objectId)
-            except Exception as e:
-                self.positiveExamples.remove(element)
-                print("An error occured while resolving ids: " + str(subjectId) + ", "+str(objectId)+". From the following element: "+str(element)+"\n")
-                print("As a consequence, the element will be remove from the examples list")
-
-            if(subjectName != ""):
-                element['sub'] = subjectName
-            else:
-                print("Because the subject wasn't found in the google knowledge graph, the element will be removed from the list")
-                try:
-                    self.negativeExamples.remove(element)
-                except:
-                    pass
-            if(objectName != ""):
-                element['obj'] = objectName
-            else:
-                print("Because the subject wasn't found in the google knowledge graph, the element will be removed from the list")
-                try:
-                    self.negativeExamples.remove(element)
-                except:
-                    pass
-        print(self.negativeExamples)
-
-        for element in self.negativeExamples:
-            writeNegativeExamples.write(str(element))
+        #for element in self.negativeExamples:
+            #writeNegativeExamples.write(str(element))
 
     """
     Observed a bug in files, and I had to split the elements with a new line
@@ -161,6 +165,7 @@ class ProgrammingAssignmentThree():
 
         elements = readFile.read()
         elements = elements.replace("}{", "}\n{")
+        #elements = elements.replace("'", "\"")
 
         writeFile = open(str(path)+"Nornalized.json", "a", encoding="utf-8")
         writeFile.write(str(elements))
@@ -171,21 +176,34 @@ class ProgrammingAssignmentThree():
     def reviewTheSet(self, path):
 
         readFile = open(str(path), "r", encoding="utf-8")
-        writeFile = open("CorrectedSet.json", "a", encoding="utf-8")
+        #writeFile = open("CorrectedSet.json", "a", encoding="utf-8")
 
+        i=0
         for element in readFile:
-            print(element)
-            break
+            if(i<100):
+                list = decode(element, encoding="utf-8")
+                if((list['sub'] in list['evidences'][0]['snippet']) and (list['obj'] in list['evidences'][0]['snippet'])):
+                    #print(list['evidences'][0]['snippet'])
+                    new_element = json.dumps(list)
+                    print(new_element)
+                else:
+                    #new_element = json.dumps(list)
+                    #print(new_element)
+                    pass
+
+                i += 1
+            else:
+                break
 
 
 
 
-test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
+test = ProgrammingAssignmentThree("20130403-institution.json")
 #test.queryGoogleKnowledgeGraph("/m/02v_brk")
 #test.sortExamples()
 #test.idToName()
-
+test.reviewTheSet("positive_example2_nornalized.json")
 
 
 #For debug purposes
-#test.normalizeDocuments("negative_example_place.txt")
+#test.normalizeDocuments("positive_example2.txt")
