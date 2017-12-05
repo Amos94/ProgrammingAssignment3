@@ -2,6 +2,9 @@ import json #used to decode the JSON files and fetch the data
 import urllib.request as urllib #used for Google Knowledge Graph
 import ast
 from demjson import decode
+import nltk
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
 
 class ProgrammingAssignmentThree():
 
@@ -172,29 +175,30 @@ class ProgrammingAssignmentThree():
 
     """
     Remove the entities in which the subject or the object cannot be found in the text snippet
+    ---Once you resolve the IDs, identify the strings in the text snippet.
     """
     def reviewTheSet(self, path):
 
         readFile = open(str(path), "r", encoding="utf-8")
-        #writeFile = open("CorrectedSet.json", "a", encoding="utf-8")
+        writeFile = open("negative_example_place_CorrectedSet.json", "a", encoding="utf-8")
 
-        i=0
         for element in readFile:
-            if(i<100):
-                list = decode(element, encoding="utf-8")
-                if((list['sub'] in list['evidences'][0]['snippet']) and (list['obj'] in list['evidences'][0]['snippet'])):
-                    #print(list['evidences'][0]['snippet'])
-                    new_element = json.dumps(list)
-                    print(new_element)
-                else:
-                    #new_element = json.dumps(list)
-                    #print(new_element)
-                    pass
-
-                i += 1
+            list = decode(element, encoding="utf-8")
+            if((list['sub'] in list['evidences'][0]['snippet']) and (list['obj'] in list['evidences'][0]['snippet'])):
+                #print(list['evidences'][0]['snippet'])
+                new_element = json.dumps(list)
+                writeFile.write(new_element+"\n")
             else:
-                break
+                print("---")
+                print("The exact string was not found in the text snippet")
+                print(element)
+                print("---")
 
+    """
+    Part of speech tagging of a given text snippet
+    """
+    def partOfSpeechTagging(self, text):
+        return nltk.pos_tag(nltk.word_tokenize(str(text)))
 
 
 
@@ -202,7 +206,8 @@ test = ProgrammingAssignmentThree("20130403-institution.json")
 #test.queryGoogleKnowledgeGraph("/m/02v_brk")
 #test.sortExamples()
 #test.idToName()
-test.reviewTheSet("positive_example2_nornalized.json")
+#test.reviewTheSet("negative_example_place_nornalized.json")
+print(test.partOfSpeechTagging("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843. Mainly associated with Nottinghamshire, he made 12 known appearances in first-class matches. He represented the North in the North v. South series."))
 
 
 #For debug purposes
