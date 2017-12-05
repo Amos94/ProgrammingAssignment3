@@ -1,6 +1,8 @@
 import json #used to decode the JSON files and fetch the data
 import urllib.request as urllib #used for Google Knowledge Graph
 import ast
+
+import spacy
 from demjson import decode
 import nltk
 nltk.download('punkt')
@@ -200,6 +202,26 @@ class ProgrammingAssignmentThree():
     def partOfSpeechTagging(self, text):
         return nltk.pos_tag(nltk.word_tokenize(str(text)))
 
+    """
+    Split sentences of a text and return a list of sentences
+    """
+    def sentenceTokenizer(self, text):
+        return nltk.sent_tokenize(text, language='english')
+
+    #TO DO base-phrase chunking
+
+    """
+    Dependency parsing with SPACY
+    """
+    def dependencyParsing(self, sentence):
+        dependencyParsingList = []
+        nlp = spacy.load('en')
+        doc = nlp(sentence)
+        for chunk in doc.noun_chunks:
+            dependencyParsingList.append([chunk.text, chunk.root.text, chunk.root.dep_,chunk.root.head.text])
+        return dependencyParsingList
+
+    #TO DO  full constituent parsing
 
 
 test = ProgrammingAssignmentThree("20130403-institution.json")
@@ -208,7 +230,7 @@ test = ProgrammingAssignmentThree("20130403-institution.json")
 #test.idToName()
 #test.reviewTheSet("negative_example_place_nornalized.json")
 print(test.partOfSpeechTagging("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843. Mainly associated with Nottinghamshire, he made 12 known appearances in first-class matches. He represented the North in the North v. South series."))
-
+print(test.dependencyParsing("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
 
 #For debug purposes
 #test.normalizeDocuments("positive_example2.txt")
