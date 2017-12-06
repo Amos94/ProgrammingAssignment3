@@ -88,7 +88,7 @@ class ProgrammingAssignmentThree():
     """
     def idToName(self):
 
-        writePositiveExamples = open("positive_example2.txt", "a", encoding="utf-8")
+        writePositiveExamples = open("positive_example2_place_of_birth.txt", "a", encoding="utf-8")
         #writeNegativeExamples = open("negative_example_place.txt", "a", encoding="utf-8")
 
         for element in self.positiveExamples:
@@ -120,7 +120,7 @@ class ProgrammingAssignmentThree():
             #     self.positiveExamples.remove(element)
             # except:
             #     pass
-            writePositiveExamples.write(str(element))
+            writePositiveExamples.write(str(element)+"\n")
         print(self.positiveExamples)
 
         # for element in self.positiveExamples:
@@ -224,13 +224,13 @@ class ProgrammingAssignmentThree():
     #TO DO  full constituent parsing
 
 
-test = ProgrammingAssignmentThree("20130403-institution.json")
+test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
 #test.queryGoogleKnowledgeGraph("/m/02v_brk")
-#test.sortExamples()
-#test.idToName()
+test.sortExamples()
+test.idToName()
 #test.reviewTheSet("negative_example_place_nornalized.json")
-print(test.partOfSpeechTagging("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843. Mainly associated with Nottinghamshire, he made 12 known appearances in first-class matches. He represented the North in the North v. South series."))
-print(test.dependencyParsing("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
+#print(test.partOfSpeechTagging("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843. Mainly associated with Nottinghamshire, he made 12 known appearances in first-class matches. He represented the North in the North v. South series."))
+#print(test.dependencyParsing("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
 
 #For debug purposes
 #test.normalizeDocuments("positive_example2.txt")
