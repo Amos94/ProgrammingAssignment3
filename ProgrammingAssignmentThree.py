@@ -1,7 +1,13 @@
 import json #used to decode the JSON files and fetch the data
 import urllib.request as urllib #used for Google Knowledge Graph
 import ast
-
+import scipy as sp
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+from numpy.random import normal
+from sklearn.metrics import zero_one_loss
+from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
 import spacy
 from demjson import decode
 import nltk
@@ -222,6 +228,17 @@ class ProgrammingAssignmentThree():
         return dependencyParsingList
 
     #TO DO  full constituent parsing
+
+    #Logistic Regression
+    def sigm(self, x):
+        return 1 / (1 + sp.exp(-x))
+
+    #Empirical Error
+    def misclassification_error(h, X, y):
+        error = 0
+        for xi, yi in zip(X, y):
+            if h(xi) != yi: error += 1
+        return float(error) / len(X)
 
 
 test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
