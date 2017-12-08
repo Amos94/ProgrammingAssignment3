@@ -2,6 +2,7 @@ import json #used to decode the JSON files and fetch the data
 import urllib.request as urllib #used for Google Knowledge Graph
 import ast
 import scipy as sp
+import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
 from numpy.random import normal
@@ -9,6 +10,7 @@ from sklearn.metrics import zero_one_loss
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
 import spacy
+from subject_object_extraction import findSVOs
 from demjson import decode
 import nltk
 nltk.download('punkt')
@@ -23,6 +25,7 @@ class ProgrammingAssignmentThree():
     positiveElementsResolved = [] #No more ids
     negativeElementsResolved = [] #No more ids
     positiveAndNegativeExamples = {} #Keep in this dictionary positive and negative examples, {JSON OBJECT:"yes"}, {JSON OBJECT: "no"}
+    parser = spacy.en.English()
 
     """
     Constructor
@@ -31,7 +34,8 @@ class ProgrammingAssignmentThree():
     """
     def __init__(self, filePath=""):
 
-        self.file = open(filePath, "r", encoding="utf-8")
+
+        self.file = open("relevant_resources\\"+filePath, "r", encoding="utf-8")
         #For debug purposes
         #print(str(self.file.read()))
 
@@ -201,6 +205,30 @@ class ProgrammingAssignmentThree():
                 print(element)
                 print("---")
 
+
+    """
+    Tokenization, Lemmatization, shape, prefix, suffix, probability, cluster
+    """
+    def nlp(self, sentence):
+
+        parsedData = self.parser(sentence)
+        dict = {}
+        for token in parsedData:
+            dict[token] = [token, token.lemma_, token.shape_, token.prefix_, token.suffix_, token.prob, token.cluster]
+        return dict
+
+    """
+    Get the entities of a sentence
+    """
+    def getEntities(self, sentence):
+        entities = []
+        parsedEx = self.parser(sentence)
+        ents = list(parsedEx.ents)
+        for entity in ents:
+            entities.append([entity.label, entity.label_, ' '.join(t.orth_ for t in entity)])
+
+        return entities
+
     """
     Part of speech tagging of a given text snippet
     """
@@ -220,13 +248,16 @@ class ProgrammingAssignmentThree():
     """
     def dependencyParsing(self, sentence):
         dependencyParsingList = []
-        nlp = spacy.load('en')
-        doc = nlp(sentence)
+
+        doc = self.parser(sentence)
         for chunk in doc.noun_chunks:
             dependencyParsingList.append([chunk.text, chunk.root.text, chunk.root.dep_,chunk.root.head.text])
         return dependencyParsingList
 
     #TO DO  full constituent parsing
+
+
+    #Machine Learning Part
 
     #Logistic Regression
     def sigm(self, x):
@@ -244,15 +275,23 @@ class ProgrammingAssignmentThree():
             if h(xi) != yi: error += 1
         return float(error) / len(X)
 
+    #Perceptron
+    def sigmoid(self, a, x):
+        return 1 / (1 + np.exp(-a * x))
+
+    def unit_step(x):
+        return 1.0 * (x >= 0)
+
 
 test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
 #test.queryGoogleKnowledgeGraph("/m/02v_brk")
 #test.sortExamples()
 #test.idToName()
 #test.reviewTheSet("negative_examples_place_nornalized.json")
-#print(test.partOfSpeechTagging("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843. Mainly associated with Nottinghamshire, he made 12 known appearances in first-class matches. He represented the North in the North v. South series."))
-#print(test.dependencyParsing("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
-
+print(test.partOfSpeechTagging("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843. Mainly associated with Nottinghamshire, he made 12 known appearances in first-class matches. He represented the North in the North v. South series."))
+print(test.dependencyParsing("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
+print(test.nlp("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
+print(test.getEntities("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
 
 
 
