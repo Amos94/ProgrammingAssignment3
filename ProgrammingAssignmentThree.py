@@ -241,6 +241,11 @@ class ProgrammingAssignmentThree():
     def sentenceTokenizer(self, text):
         return nltk.sent_tokenize(text, language='english')
 
+    def subjectObjectExtraction(self, sentence):
+        parse = self.parser(sentence)
+        return findSVOs(parse)
+
+
     #TO DO base-phrase chunking
 
     """
@@ -292,6 +297,7 @@ print(test.partOfSpeechTagging("Charles Creswell (born 10 March 1813 at Radford,
 print(test.dependencyParsing("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
 print(test.nlp("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
 print(test.getEntities("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
+print(test.subjectObjectExtraction("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
 
 
 
