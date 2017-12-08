@@ -94,8 +94,8 @@ class ProgrammingAssignmentThree():
     """
     def idToName(self):
 
-        writePositiveExamples = open("positive_example2_place_of_birth.txt", "a", encoding="utf-8")
-        #writeNegativeExamples = open("negative_example_place.txt", "a", encoding="utf-8")
+        writePositiveExamples = open("positive_examples_place_of_birth.txt", "a", encoding="utf-8")
+        #writeNegativeExamples = open("negative_examples_place.txt", "a", encoding="utf-8")
 
         for element in self.positiveExamples:
             subjectId = element['sub']
@@ -233,8 +233,13 @@ class ProgrammingAssignmentThree():
     def sigm(self, x):
         return 1 / (1 + sp.exp(-x))
 
+    def doLogisticRegression(self, X, y):
+        h = LogisticRegression()
+        h.fit(X,y)
+        plt.plot(X, y, h.predict())
+
     #Empirical Error
-    def misclassification_error(h, X, y):
+    def misclassification_error(self, h, X, y):
         error = 0
         for xi, yi in zip(X, y):
             if h(xi) != yi: error += 1
@@ -243,11 +248,14 @@ class ProgrammingAssignmentThree():
 
 test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
 #test.queryGoogleKnowledgeGraph("/m/02v_brk")
-test.sortExamples()
-test.idToName()
+#test.sortExamples()
+#test.idToName()
 #test.reviewTheSet("negative_example_place_nornalized.json")
 #print(test.partOfSpeechTagging("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843. Mainly associated with Nottinghamshire, he made 12 known appearances in first-class matches. He represented the North in the North v. South series."))
 #print(test.dependencyParsing("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
 
+
+
+
 #For debug purposes
-#test.normalizeDocuments("positive_example2.txt")
+#test.normalizeDocuments("positive_examples_institution.txt")
