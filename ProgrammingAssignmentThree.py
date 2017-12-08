@@ -250,7 +250,7 @@ test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
 #test.queryGoogleKnowledgeGraph("/m/02v_brk")
 #test.sortExamples()
 #test.idToName()
-#test.reviewTheSet("negative_example_place_nornalized.json")
+#test.reviewTheSet("negative_examples_place_nornalized.json")
 #print(test.partOfSpeechTagging("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843. Mainly associated with Nottinghamshire, he made 12 known appearances in first-class matches. He represented the North in the North v. South series."))
 #print(test.dependencyParsing("Charles Creswell (born 10 March 1813 at Radford, Nottinghamshire; died 22 November 1882 at Heaton Norris, Cheshire) was an English cricketer who played first-class cricket from 1836 to 1843."))
 
