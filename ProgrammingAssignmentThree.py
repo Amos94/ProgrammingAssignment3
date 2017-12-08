@@ -95,8 +95,9 @@ class ProgrammingAssignmentThree():
     def idToName(self):
 
         writePositiveExamples = open("positive_examples_place_of_birth.txt", "a", encoding="utf-8")
-        #writeNegativeExamples = open("negative_examples_place.txt", "a", encoding="utf-8")
+        writeNegativeExamples = open("negative_examples_place.txt", "a", encoding="utf-8")
 
+        # ----- POSITIVE -----
         for element in self.positiveExamples:
             subjectId = element['sub']
             objectId = element['obj']
@@ -127,44 +128,42 @@ class ProgrammingAssignmentThree():
             # except:
             #     pass
             writePositiveExamples.write(str(element)+"\n")
-        print(self.positiveExamples)
+        #For debug purposes
+        #print(self.positiveExamples)
 
-        # for element in self.positiveExamples:
-        #     writePositiveExamples.write(str(element))
+        #----- NEGATIVE -----
+        for element in self.negativeExamples:
+            subjectId = element['sub']
+            objectId = element['obj']
 
-        # for element in self.negativeExamples:
-        #     subjectId = element['sub']
-        #     objectId = element['obj']
-        #
-        #     #print(subjectId, objectId)
-        #     try:
-        #         subjectName = self.queryGoogleKnowledgeGraph(subjectId)
-        #         objectName = self.queryGoogleKnowledgeGraph(objectId)
-        #     except Exception as e:
-        #         self.negativeExamples.remove(element)
-        #         print("An error occured while resolving ids: " + str(subjectId) + ", "+str(objectId)+". From the following element: "+str(element)+"\n")
-        #         print("As a consequence, the element will be remove from the examples list")
-        #
-        #     if(subjectName != ""):
-        #         element['sub'] = subjectName
-        #     else:
-        #         print("Because the subject wasn't found in the google knowledge graph, the element will be removed from the list")
-        #         try:
-        #             self.negativeExamples.remove(element)
-        #         except:
-        #             pass
-        #     if(objectName != ""):
-        #         element['obj'] = objectName
-        #     else:
-        #         print("Because the subject wasn't found in the google knowledge graph, the element will be removed from the list")
-        #         try:
-        #             self.negativeExamples.remove(element)
-        #         except:
-        #             pass
-        #print(self.negativeExamples)
+            #print(subjectId, objectId)
+            try:
+                subjectName = self.queryGoogleKnowledgeGraph(subjectId)
+                objectName = self.queryGoogleKnowledgeGraph(objectId)
+            except Exception as e:
+                self.negativeExamples.remove(element)
+                print("An error occured while resolving ids: " + str(subjectId) + ", "+str(objectId)+". From the following element: "+str(element)+"\n")
+                print("As a consequence, the element will be remove from the examples list")
 
-        #for element in self.negativeExamples:
-            #writeNegativeExamples.write(str(element))
+            if(subjectName != ""):
+                element['sub'] = subjectName
+            else:
+                print("Because the subject wasn't found in the google knowledge graph, the element will be removed from the list")
+                try:
+                    self.negativeExamples.remove(element)
+                except:
+                    pass
+            if(objectName != ""):
+                element['obj'] = objectName
+            else:
+                print("Because the subject wasn't found in the google knowledge graph, the element will be removed from the list")
+            # try:
+            #     self.negativeExamples.remove(element)
+            # except:
+            #     pass
+            writeNegativeExamples.write(str(element)+"\n")
+        #For debug purposes
+        #print(self.positiveExamples)
 
     """
     Observed a bug in files, and I had to split the elements with a new line
