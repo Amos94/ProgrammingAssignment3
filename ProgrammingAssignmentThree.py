@@ -214,7 +214,10 @@ class ProgrammingAssignmentThree():
         parsedData = self.parser(sentence)
         dict = {}
         for token in parsedData:
-            dict[token] = [token, token.lemma_, token.shape_, token.prefix_, token.suffix_, token.prob, token.cluster]
+            if(token.lemma_ != '-PRON-'):
+                dict[token] = [token, token.lemma_, token.shape_, token.prefix_, token.suffix_, token.prob, token.cluster]
+            else:
+                dict[token] = [token, token, token.shape_, token.prefix_, token.suffix_, token.prob, token.cluster]
         return dict
 
     """
@@ -261,6 +264,37 @@ class ProgrammingAssignmentThree():
 
     #TO DO  full constituent parsing
 
+    """
+    Here we run various methods on each text snippet given. We extract all the features implemented above.
+    """
+    def featureExtraction(self, textSnippet):
+        sentencesDictionary = {}
+        sentences = self.sentenceTokenizer(textSnippet)
+
+        for sentence in sentences:
+            dictionary = {}
+            dictionary['partOfSpeechTagging'] = self.partOfSpeechTagging(textSnippet)
+            dictionary['test.dependencyParsing'] = self.dependencyParsing(textSnippet)
+            dictionary['nlp'] = self.nlp(textSnippet)
+            dictionary['getEntities'] = self.getEntities(textSnippet)
+            dictionary['subjectObjectExtraction'] = self.subjectObjectExtraction(textSnippet)
+
+            sentencesDictionary[sentence] = dictionary
+
+        return sentencesDictionary
+    """
+    Here we run various methods on each JSON element of a document. We extract all the features using featureExtraction method.
+    We then save these in JSON format, and then, we split the data(train and test) in order to pass it to our 
+    classifiers.
+    """
+    def documentFeatureExtraction(self, path):
+
+        readDocument = open(path, "r", encoding='utf-8')
+        writeDocument = open(path+"_features_extracted.json", "a", encoding='utf-8')
+        pass
+
+
+
 
     #Machine Learning Part
 
@@ -298,7 +332,6 @@ print(test.dependencyParsing("Lacourse graduated from St. Mary Academy - Bay Vie
 print(test.nlp("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
 print(test.getEntities("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
 print(test.subjectObjectExtraction("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
-test.normalizeDocuments("positive_examples_place_of_birth.txt")
 
 
 #For debug purposes
