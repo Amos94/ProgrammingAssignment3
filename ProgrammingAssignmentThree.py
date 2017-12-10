@@ -329,6 +329,7 @@ class ProgrammingAssignmentThree():
         found = False
 
         for name in nameFromUrl.split(" "):
+            #Maybe we can find a better way to check not just as substrings
             if(str(name) not in str(subject)):
                 found = False
                 break
@@ -340,6 +341,17 @@ class ProgrammingAssignmentThree():
         else:
             return 0
 
+    """
+    Check if SUB(or chuncks of SUB) cam be found in snippet
+    """
+    def subInText(self, sub):
+        pass
+
+    """
+    Check if OBJ(or chuncks of OBJ) can be found in snippet
+    """
+    def objInText(self, obj):
+        pass
                 
     #Machine Learning Part
 
