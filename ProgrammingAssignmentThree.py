@@ -289,13 +289,29 @@ class ProgrammingAssignmentThree():
     """
     def documentFeatureExtraction(self, path):
 
-        readDocument = open(path, "r", encoding='utf-8')
-        writeDocument = open(path+"_features_extracted.json", "a", encoding='utf-8')
-        pass
+        readFile = open(path, "r", encoding='utf-8')
+        writeFile = open(path.replace(".json","")+"_features_extracted.json", "a", encoding='utf-8')
+        for element in readFile:
+            list = decode(element, encoding="utf-8")
+            #with this we also solve the not yet resolved IDs (that couldn't be found by Google Knowledge Graph)
+            if('/m/' not in list['sub'] and '/m/' not in list['obj']):
+                featuresExtracted = self.featureExtraction(list['evidences'][0]['snippet'])
+                listOfSentencesAndTheirFeatures = []
+                for key, value in featuresExtracted.items():
+                    featuresList = []
+                    for k,v in value.items():
+                        featuresList.append(json.dumps({str(k):str(v)}))
+                    listOfSentencesAndTheirFeatures.append(json.dumps({'sentence':str(key), 'features':featuresList}))
 
+                toWrite = json.dumps({'pred':list['pred'],
+                                      'sub':list['sub'],
+                                      'obj':list['obj'],
+                                      'evidences':list['evidences'],
+                                      'judgments':list['judgments'],
+                                      'nlp':json.dumps(listOfSentencesAndTheirFeatures)})
+                writeFile.write(toWrite+"\n")
 
-
-
+                
     #Machine Learning Part
 
     #Logistic Regression
@@ -327,12 +343,12 @@ test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
 #test.sortExamples()
 #test.idToName()
 #test.reviewTheSet("negative_examples_place_nornalized.json")
-print(test.partOfSpeechTagging("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
-print(test.dependencyParsing("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
-print(test.nlp("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
-print(test.getEntities("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
-print(test.subjectObjectExtraction("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
-
+# print(test.partOfSpeechTagging("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
+# print(test.dependencyParsing("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
+# print(test.nlp("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
+# print(test.getEntities("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
+# print(test.subjectObjectExtraction("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
+test.documentFeatureExtraction('positive_examples_place_of_birth_nornalized.json')
 
 #For debug purposes
 #test.normalizeDocuments("positive_examples_institution.txt")
