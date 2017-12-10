@@ -216,9 +216,9 @@ class ProgrammingAssignmentThree():
         dict = {}
         for token in parsedData:
             if(token.lemma_ != '-PRON-'):
-                dict[token] = [token, token.lemma_, token.shape_, token.prefix_, token.suffix_, token.prob, token.cluster]
+                dict[token] = {'token':token, 'lemma':token.lemma_, 'shape':token.shape_, 'prefix':token.prefix_, 'suffix':token.suffix_, 'probability':token.prob, 'cluster':token.cluster}
             else:
-                dict[token] = [token, token, token.shape_, token.prefix_, token.suffix_, token.prob, token.cluster]
+                dict[token] = {'token':token, 'lemma':token, 'shape':token.shape_, 'prefix':token.prefix_, 'suffix':token.suffix_, 'probability':token.prob, 'cluster':token.cluster}
         return dict
 
     """
@@ -379,6 +379,7 @@ test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
 # print(test.subjectObjectExtraction("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
 #test.documentFeatureExtraction('positive_examples_place_of_birth_nornalized.json')
 print(test.isNameInUrl("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}"))
-
+print(test.nlp("Bourgelat was born at Lyon."))
+print(test.featureExtraction("Bourgelat was born at Lyon."))
 #For debug purposes
 #test.normalizeDocuments("positive_examples_institution.txt")
