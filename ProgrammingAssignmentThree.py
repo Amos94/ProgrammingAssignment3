@@ -344,14 +344,45 @@ class ProgrammingAssignmentThree():
     """
     Check if SUB(or chuncks of SUB) cam be found in snippet
     """
-    def subInText(self, sub):
-        pass
+    def subInText(self, jsonObject):
+
+        list = decode(jsonObject, encoding='utf-8')
+
+        subject = str(u.parse.unquote(list['sub']))
+        snippet = str(u.parse.unquote(list['evidences'][0]['snippet']))
+
+        found = False
+        #We are ok if we find ANY of many names a subject might have in text!
+        for name in subject.split(" "):
+            if(name in snippet):
+                found = True
+
+        if(found == True):
+            return 1
+        else:
+            return 0
+
 
     """
     Check if OBJ(or chuncks of OBJ) can be found in snippet
     """
-    def objInText(self, obj):
-        pass
+    def objInText(self, jsonObject):
+
+        list = decode(jsonObject, encoding='utf-8')
+
+        object = str(u.parse.unquote(list['obj']))
+        snippet = str(u.parse.unquote(list['evidences'][0]['snippet']))
+
+        found = False
+        #We are ok if we find ANY of many elements an OBJECT NAME might have in text!
+        for element in object.split(" "):
+            if(element in snippet):
+                found = True
+
+        if(found == True):
+            return 1
+        else:
+            return 0
                 
     #Machine Learning Part
 
@@ -389,9 +420,12 @@ test = ProgrammingAssignmentThree("20130403-place_of_birth.json")
 # print(test.nlp("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
 # print(test.getEntities("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
 # print(test.subjectObjectExtraction("Lacourse graduated from St. Mary Academy - Bay View in 2004 and went on to study nursing at Rhode Island College where she will graduate in 2008"))
-test.documentFeatureExtraction('relevant_resources/positive_examples_place_of_birth_nornalized.json')
-# print(test.isNameInUrl("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}"))
-# print(test.nlp("Bourgelat was born at Lyon."))
-# print(test.featureExtraction("Bourgelat was born at Lyon."))
+#test.documentFeatureExtraction('relevant_resources/positive_examples_place_of_birth_nornalized.json')
+print(test.nlp("Bourgelat was born at Lyon."))
+print(test.featureExtraction("Bourgelat was born at Lyon."))
+print("Status for subject: " + str(test.subInText("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}")))
+print("Status for object: " + str(test.objInText("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}")))
+print("Status for name in URL: " + str(test.isNameInUrl("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}")))
+
 #For debug purposes
 #test.normalizeDocuments("positive_examples_institution.txt")
