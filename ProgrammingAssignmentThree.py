@@ -311,6 +311,14 @@ class ProgrammingAssignmentThree():
                                       'nlp':json.dumps(listOfSentencesAndTheirFeatures)})
                 writeFile.write(toWrite+"\n")
 
+    """
+    Check if the URL name (after wikipedia.com/Name_Surname) is part of the 'sub'
+    if Yes, return 1
+    else return 0
+    """
+    def getURLName(self, jsonObject):
+        pass
+
                 
     #Machine Learning Part
 
