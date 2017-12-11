@@ -501,6 +501,34 @@ class ProgrammingAssignmentThree():
         doc = self.parser(snippet)
         return [self.toNltkTrees(sent.root).pprint() for sent in doc.sents]
 
+    """
+    Returns the dependency labels to root of a token
+    """
+    def dependencyLabelsToRoot(self,token):
+        """Walk up the syntactic tree, collecting the arc labels."""
+        dep_labels = []
+        while token.head != token:
+            dep_labels.append(token.dep_)
+            token = token.head
+        return dep_labels
+
+
+    """
+    Returns for each token of a sentence:
+    Text    Token_POS	Dep     Dep_labels_to_root 	Head text	Head POS	Children
+    """
+    def analyzeParseTree(self, sentence):
+
+        dict = {}
+
+        doc = self.parser(sentence)
+        for token in doc:
+            dict[token] = {'text':token.text, 'token_pos':token.pos_ , 'token_dep':token.dep_, 'dep_labels_to_root':self.dependencyLabelsToRoot(token),
+                           'head_text':token.head.text, 'head_pos':token.head.pos_, 'children':[child for child in token.children]}
+
+        return dict
+
+
 
     """
     If the subject of the sentence appears in the text snippet, it's the subject in a sentence, 
@@ -556,5 +584,7 @@ print("Status for name in URL: " + str(test.isNameInUrl("{'pred': '/people/perso
 print(test.analyzeSentences("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}"))
 print(test.isTheSubjectInADirectRelationshipWithTheObject("Claude Bourgelat","Lyon","Bourgelat was born at Lyon."))
 print(test.getTrees('Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'))
+print(test.analyzeParseTree("Bourgelat was born at Lyon."))
+
 #For debug purposes
 #test.normalizeDocuments("positive_examples_institution.txt")
