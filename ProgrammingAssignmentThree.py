@@ -484,6 +484,16 @@ class ProgrammingAssignmentThree():
         else:
             return 0
 
+
+    """
+    If the subject of the sentence appears in the text snippet, it's the subject in a sentence, 
+    and in the next sentence appears a PRON that is in a relationship with the object, than we might have a long distance?
+    
+    TO BE IMPLEMENTED!
+    """
+
+
+
     #Machine Learning Part
 
     #Logistic Regression
