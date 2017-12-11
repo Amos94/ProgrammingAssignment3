@@ -14,6 +14,7 @@ import spacy
 from subject_object_extraction import findSVOs
 from demjson import decode
 import nltk
+import subject_object_extraction as soe
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
@@ -250,6 +251,8 @@ class ProgrammingAssignmentThree():
         return findSVOs(parse)
 
 
+
+
     #TO DO base-phrase chunking
 
     """
@@ -423,7 +426,7 @@ class ProgrammingAssignmentThree():
             return 0
 
     """
-    Analyze the sentences that exclusively contains either sub or obj 
+    This method analyze the sentences that exclusively contains the subject or the object (extracting their features)
     """
     def analyzeSentences(self, jsonObject):
         list = decode(jsonObject, encoding='utf-8')
@@ -445,6 +448,41 @@ class ProgrammingAssignmentThree():
 
         return sentencesDict
 
+    """
+    Return the dependencies
+    """
+    def getDeps(self, sentence):
+        return soe.getDeps(self.parser(sentence))
+
+    """
+    Return SVs
+    """
+    def getSVs(self, sentence):
+        return soe.findSVs(self.parser(sentence))
+
+    """
+    Verify is the subject and the object are in a direct relationship withing a sentence
+    """
+    def isTheSubjectInADirectRelationshipWithTheObject(self,subject, object, sentence):
+
+        relationFound = False
+        dict = self.getDeps(sentence)
+        if((self.subInSentence(sentence, subject) == 1) and (self.objInSentence(sentence, object) == 1)):
+
+            for subjName in subject.split(" "):
+                for objName in object.split(" "):
+
+                    try:
+                        """NOTICE THAT WE MIGHT HAVE TO ADD MORE IN THE ARRAYS BELOW!!!!"""
+                        if((dict[str(subjName)][1] in ["nsubj", "nsubjpass", "csubj", "csubjpass", "agent", "expl"]) and (dict[str(objName)][1] in ["dobj", "dative", "attr", "oprd", "pobj"])):
+                            relationFound = True
+                    except Exception as e:
+                        pass
+
+        if(relationFound == True):
+            return 1
+        else:
+            return 0
 
     #Machine Learning Part
 
@@ -489,6 +527,7 @@ print("Status for subject: " + str(test.subInText("{'pred': '/people/person/plac
 print("Status for object: " + str(test.objInText("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}")))
 print("Status for name in URL: " + str(test.isNameInUrl("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}")))
 print(test.analyzeSentences("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}"))
+print(test.isTheSubjectInADirectRelationshipWithTheObject("Claude Bourgelat","Lyon","Bourgelat was born at Lyon."))
 
 #For debug purposes
 #test.normalizeDocuments("positive_examples_institution.txt")
