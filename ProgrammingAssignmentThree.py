@@ -484,6 +484,23 @@ class ProgrammingAssignmentThree():
         else:
             return 0
 
+    """
+    Creates the tree structure of a sentence
+    """
+    def toNltkTrees(self, node):
+        if node.n_lefts + node.n_rights > 0:
+            return nltk.Tree(node.orth_, [self.toNltkTrees(child) for child in node.children])
+        else:
+            return node.orth_
+
+    """
+    returns the tree structure of a sentence
+    """
+    def getTrees(self, snippet):
+
+        doc = self.parser(snippet)
+        return [self.toNltkTrees(sent.root).pprint() for sent in doc.sents]
+
 
     """
     If the subject of the sentence appears in the text snippet, it's the subject in a sentence, 
@@ -538,6 +555,6 @@ print("Status for object: " + str(test.objInText("{'pred': '/people/person/place
 print("Status for name in URL: " + str(test.isNameInUrl("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}")))
 print(test.analyzeSentences("{'pred': '/people/person/place_of_birth', 'sub': 'Claude Bourgelat', 'obj': 'Lyon', 'evidences': [{'url': 'http://en.wikipedia.org/wiki/Claude_Bourgelat', 'snippet': 'Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'}], 'judgments': [{'rater': '17082466750572480596', 'judgment': 'yes'}, {'rater': '11595942516201422884', 'judgment': 'yes'}, {'rater': '16169597761094238409', 'judgment': 'yes'}, {'rater': '16651790297630307764', 'judgment': 'yes'}, {'rater': '11658533362118524115', 'judgment': 'yes'}]}"))
 print(test.isTheSubjectInADirectRelationshipWithTheObject("Claude Bourgelat","Lyon","Bourgelat was born at Lyon."))
-
+print(test.getTrees('Bourgelat was born at Lyon. He was the founder of veterinary colleges at Lyon in 1762, as well as an authority on horse management, and often consulted on the matter. Other dates claimed for the establishment of the Lyon College, the first veterinary school in the world, are 1760 and 1761.'))
 #For debug purposes
 #test.normalizeDocuments("positive_examples_institution.txt")
